@@ -116,15 +116,3 @@ source .venv/bin/activate
 pip install -r requirements.txt
 streamlit run streamlit_app.py
 ```
-
-### Share it with someone
-
-Use Streamlit Community Cloud:
-
-1. Push this repo to GitHub.
-2. Go to [share.streamlit.io](https://share.streamlit.io/).
-3. Create app and select:
-   - repo: your repo
-   - branch: `main`
-   - main file: `streamlit_app.py`
-4. Share the generated URL.

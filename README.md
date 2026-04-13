@@ -2,8 +2,6 @@
 
 Schema reference and intake funnel metrics from mock event data.
 
-## Website
-
 ## Database schema
 
 ### `users`
@@ -88,6 +86,20 @@ Medians are similar by type; review runs a bit lower for 13614c.
 - **7** events with `time_spent_seconds === 0`
 - **33** events with ≤ 3s (possible instrumentation noise or instant abandon)
 
+### Supabase Integration Approach
+
+In production, I would replace the mock CSV with Supabase to handle real-time data storage and analytics.
+
+Intake data would be modeled using an event-based schema:
+
+- users (id, intake_type, created_at)
+- events (user_id, stage, timestamp, time_spent_seconds)
+
+As users progress through the intake flow, each stage transition would be recorded as an event in Supabase via its client SDK.
+
+The dashboard would query this data to compute funnel metrics (stage counts, conversion rates, drop-offs), either through SQL queries or lightweight API routes.
+
+This approach enables scalable, real-time analytics and cleanly replaces the current CSV-based pipeline.
 
 This repository now includes a static dashboard site for `data/mock_intake.csv`.
 
@@ -101,5 +113,5 @@ Because the page fetches CSV data, serve it through a local HTTP server:
 
 ```bash
 python3 -m http.server 8000
-open `http://localhost:8000`
+open http://localhost:8000
 ```

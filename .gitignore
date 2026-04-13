@@ -1,2 +1,4 @@
 .DS_Store
 intake-dashboard/
+.venv/
+__pycache__/

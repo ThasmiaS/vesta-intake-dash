@@ -4,31 +4,6 @@ Schema reference and intake funnel metrics from mock event data.
 
 ## Website
 
-This repository now includes a static dashboard site for `data/mock_intake.csv`.
-
-- Entry page: `index.html`
-- Logic: `app.js`
-- Styles: `styles.css`
-
-### Run locally
-
-Because the page fetches CSV data, serve it through a local HTTP server:
-
-```bash
-python3 -m http.server 8000
-```
-
-Then open `http://localhost:8000`.
-
-### Deploy to GitHub Pages
-
-1. Push the repo to GitHub (default branch `main`).
-2. In GitHub, go to **Settings -> Pages**.
-3. Under **Build and deployment**, choose **GitHub Actions** as the source.
-4. Push to `main`; workflow `.github/workflows/deploy-pages.yml` will publish the site.
-
----
-
 ## Database schema
 
 ### `users`
@@ -112,3 +87,19 @@ Medians are similar by type; review runs a bit lower for 13614c.
 
 - **7** events with `time_spent_seconds === 0`
 - **33** events with ≤ 3s (possible instrumentation noise or instant abandon)
+
+
+This repository now includes a static dashboard site for `data/mock_intake.csv`.
+
+- Entry page: `index.html`
+- Logic: `app.js`
+- Styles: `styles.css`
+
+### Run locally
+
+Because the page fetches CSV data, serve it through a local HTTP server:
+
+```bash
+python3 -m http.server 8000
+open `http://localhost:8000`
+```

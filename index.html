@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vesta Intake Dashboard</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <header class="header">
+        <h1>Vesta Intake Funnel</h1>
+        <p>Live metrics from <code>data/mock_intake.csv</code></p>
+      </header>
+
+      <section class="cards" id="kpis"></section>
+
+      <section class="panel">
+        <h2>Step Conversion (Overall)</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>From - To</th>
+                <th>Rate</th>
+                <th>Users</th>
+              </tr>
+            </thead>
+            <tbody id="conversion-overall"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Step Conversion by Intake Type</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>From - To</th>
+                <th>Rate</th>
+                <th>Users</th>
+              </tr>
+            </thead>
+            <tbody id="conversion-by-type"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Median Stage Time (seconds)</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Stage</th>
+                <th>Overall</th>
+                <th>ITIN</th>
+                <th>13614c</th>
+              </tr>
+            </thead>
+            <tbody id="median-time"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>

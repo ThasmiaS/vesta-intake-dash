@@ -101,17 +101,30 @@ The dashboard would query this data to compute funnel metrics (stage counts, con
 
 This approach enables scalable, real-time analytics and cleanly replaces the current CSV-based pipeline.
 
-This repository now includes a static dashboard site for `data/mock_intake.csv`.
+## Streamlit app
 
-- Entry page: `index.html`
-- Logic: `app.js`
-- Styles: `styles.css`
+This repository now includes a Streamlit dashboard app for `data/mock_intake.csv`.
+
+- App entrypoint: `streamlit_app.py`
+- Python dependencies: `requirements.txt`
 
 ### Run locally
 
-Because the page fetches CSV data, serve it through a local HTTP server:
-
 ```bash
-python3 -m http.server 8000
-open http://localhost:8000
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+streamlit run streamlit_app.py
 ```
+
+### Share it with someone
+
+Use Streamlit Community Cloud:
+
+1. Push this repo to GitHub.
+2. Go to [share.streamlit.io](https://share.streamlit.io/).
+3. Create app and select:
+   - repo: your repo
+   - branch: `main`
+   - main file: `streamlit_app.py`
+4. Share the generated URL.

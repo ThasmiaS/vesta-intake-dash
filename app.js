@@ -1,4 +1,5 @@
 const STAGES = ["visited", "started", "personal_info", "document_upload", "review", "completed"];
+let charts = [];
 
 function parseCsv(text) {
   const [headerLine, ...lines] = text.trim().split("\n");
@@ -23,6 +24,15 @@ function median(values) {
 function pct(num, den) {
   if (!den) return "0.0%";
   return `${((num / den) * 100).toFixed(1)}%`;
+}
+
+function stageLabel(stage) {
+  return stage.replaceAll("_", " ");
+}
+
+function pctValue(num, den) {
+  if (!den) return 0;
+  return Number(((num / den) * 100).toFixed(1));
 }
 
 function buildLookup(rows) {
@@ -141,6 +151,105 @@ function renderMedianTimes(state) {
   tbody.innerHTML = rows.join("");
 }
 
+function clearCharts() {
+  for (const chart of charts) chart.destroy();
+  charts = [];
+}
+
+function renderCharts(state) {
+  if (typeof Chart === "undefined") return;
+  clearCharts();
+
+  const stageLabels = STAGES.map(stageLabel);
+  const stageCounts = STAGES.map((stage) => state.stageUsersOverall.get(stage)?.size ?? 0);
+
+  const conversionLabels = [];
+  const conversionValues = [];
+  for (let i = 0; i < STAGES.length - 1; i += 1) {
+    const from = STAGES[i];
+    const to = STAGES[i + 1];
+    const fromCount = state.stageUsersOverall.get(from)?.size ?? 0;
+    const toCount = state.stageUsersOverall.get(to)?.size ?? 0;
+    conversionLabels.push(`${stageLabel(from)} -> ${stageLabel(to)}`);
+    conversionValues.push(pctValue(toCount, fromCount));
+  }
+
+  const medianTimes = STAGES.map((stage) => median(state.stageTimesOverall.get(stage) ?? []) ?? 0);
+
+  const funnelCtx = document.getElementById("funnel-chart");
+  charts.push(
+    new Chart(funnelCtx, {
+      type: "bar",
+      data: {
+        labels: stageLabels,
+        datasets: [
+          {
+            label: "Users",
+            data: stageCounts,
+            backgroundColor: "rgba(59,130,246,0.6)",
+            borderColor: "rgba(59,130,246,1)",
+            borderWidth: 1
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false }
+        }
+      }
+    })
+  );
+
+  const conversionCtx = document.getElementById("conversion-chart");
+  charts.push(
+    new Chart(conversionCtx, {
+      type: "bar",
+      data: {
+        labels: conversionLabels,
+        datasets: [
+          {
+            label: "Conversion Rate %",
+            data: conversionValues,
+            backgroundColor: "rgba(16,185,129,0.55)",
+            borderColor: "rgba(16,185,129,1)",
+            borderWidth: 1
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: { min: 0, max: 100, ticks: { callback: (value) => `${value}%` } }
+        }
+      }
+    })
+  );
+
+  const timeCtx = document.getElementById("time-chart");
+  charts.push(
+    new Chart(timeCtx, {
+      type: "line",
+      data: {
+        labels: stageLabels,
+        datasets: [
+          {
+            label: "Median Seconds",
+            data: medianTimes,
+            fill: false,
+            borderColor: "rgba(245,158,11,1)",
+            backgroundColor: "rgba(245,158,11,0.5)",
+            tension: 0.25
+          }
+        ]
+      },
+      options: {
+        responsive: true
+      }
+    })
+  );
+}
+
 async function init() {
   try {
     const response = await fetch("data/mock_intake.csv");
@@ -149,6 +258,7 @@ async function init() {
     const rows = parseCsv(text);
     const state = buildLookup(rows);
     renderKpis(state);
+    renderCharts(state);
     renderConversionOverall(state);
     renderConversionByType(state);
     renderMedianTimes(state);
